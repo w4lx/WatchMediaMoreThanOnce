@@ -4,7 +4,7 @@
 
 ### OptikServers
 
-[OptikServers](https://my.optikservers.com/join/dpyaodx5fgtWzmZ6)
+[OptikServers](https://my.optikservers.com/join/2LSsZsNRPnBMsbdZ)
 
 ### Redes sociales
 
