@@ -12,9 +12,8 @@
   "license": "ISC",
   "dependencies": {
     "@hapi/boom": "^10.0.1",
-    "@whiskeysockets/baileys": "^6.5.0",
+    "@whiskeysockets/baileys": "^6.7.7",
     "express": "^4.19.2",
-    "file-type": "^18.7.0",
     "pino": "^8.16.2"
   }
 }

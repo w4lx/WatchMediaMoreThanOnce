@@ -2,24 +2,30 @@
 import {
   makeWASocket,
   useMultiFileAuthState,
-  downloadMediaMessage,
+  generateWAMessageFromContent,
   DisconnectReason,
   Browsers,
 } from "@whiskeysockets/baileys";
-import { fileTypeFromBuffer } from "file-type";
 import { createInterface } from "node:readline";
 import { keepAlive } from "./keepAlive.js";
 import { Boom } from "@hapi/boom";
 import pino from "pino";
 
 async function connectToWA() {
+  const version = process.versions.node.split(".")[0];
+
+  if (+version < 18) {
+    console.log("Necesitas Node.js versión 18 o superior.");
+    return;
+  }
+
   const { state, saveCreds } = await useMultiFileAuthState("auth");
 
   const browser = Browsers.appropriate("chrome");
 
   const socket = makeWASocket({
     logger: pino({ level: "silent" }),
-    version: [2, 2413, 11],
+    version: [2, 3000, 1015901307],
     mobile: false,
     auth: state,
     browser,
@@ -75,39 +81,29 @@ async function connectToWA() {
 
     if (messages[0]?.key?.fromMe) return;
 
-    const fileType = Object.keys(messages[0].message)[0];
+    const { message, key } = messages[0];
 
-    console.log(fileType);
+    const msgType = Object.keys(messages[0].message)[0];
 
-    if (
-      fileType !== "messageContextInfo" &&
-      fileType !== "viewOnceMessageV2" &&
-      fileType !== "senderKeyDistributionMessage"
-    ) {
-      return;
-    }
+    const pattern =
+      /^(messageContextInfo|senderKeyDistributionMessage|viewOnceMessage(?:V2(?:Extension)?)?)$/;
 
-    const options = messages[0]?.message?.viewOnceMessageV2?.message;
+    if (!pattern.test(msgType)) return;
 
-    const mediaType = Object.keys(options)[0];
+    const lastKey = Object.keys(message).at(-1);
+    if (!/^viewOnceMessage(?:V2(?:Extension)?)?$/.test(lastKey)) return;
 
-    const data = await downloadMediaMessage(messages[0], "buffer");
+    const fileType = Object.keys(message[lastKey].message)[0];
 
-    const { mime } = await fileTypeFromBuffer(data);
-
-    let msg = "";
-
-    if (options?.[mediaType]?.caption) {
-      msg = options[mediaType].caption + "\n\n";
-    }
-
-    if (!mime) return;
+    const options = message[lastKey].message[fileType];
+    delete options.viewOnce;
 
     if (!socket?.user?.id) return;
 
-    socket.sendMessage(socket.user.id, {
-      [mime.split("/")[0]]: data,
-      caption: `${msg}_Enviado por ${messages[0]?.pushName}_`,
+    const proto = generateWAMessageFromContent(key.remoteJid, message, {});
+
+    socket.relayMessage(socket.user.id, proto.message, {
+      messageId: proto.key.id,
     });
   });
 
@@ -120,11 +116,7 @@ await connectToWA();
 
 // Por si hay un error, que no se apague.
 process.on("uncaughtException", (error) => console.error(error));
-
 process.on("uncaughtExceptionMonitor", (error) => console.error(error));
-
 process.on("unhandledRejection", (error) => console.error(error));
-
-process.stdin.resume();
 
 /* Code by Walter */
