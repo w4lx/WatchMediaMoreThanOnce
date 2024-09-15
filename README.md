@@ -8,7 +8,9 @@
 
 ### Redes sociales
 
-TikTok: [Walx](https://www.tiktok.com/@walx.dev)
+Instagram: [Walter](https://www.instagram.com/walx.dev/)
+
+TikTok: [Walter](hhttps://www.tiktok.com/@walx.dev)
 
 Discord: [WhatsApp Tools](https://discord.gg/byjMwu7uyZ)
 

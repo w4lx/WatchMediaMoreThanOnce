@@ -42,7 +42,7 @@ async function connectToWA() {
     };
 
     const number = await prompt(`Introduce tu número de WhatsApp: `);
-    const formatNumber = number.replace(/[\s+-]/g, "");
+    const formatNumber = number.replace(/[\s()+-]/g, "");
 
     const code = await socket.requestPairingCode(formatNumber);
 
@@ -95,8 +95,7 @@ async function connectToWA() {
 
     const fileType = Object.keys(message[lastKey].message)[0];
 
-    const options = message[lastKey].message[fileType];
-    delete options.viewOnce;
+    delete message[lastKey].message[fileType].viewOnce;
 
     if (!socket?.user?.id) return;
 
@@ -115,8 +114,8 @@ async function connectToWA() {
 await connectToWA();
 
 // Por si hay un error, que no se apague.
-process.on("uncaughtException", (error) => console.error(error));
-process.on("uncaughtExceptionMonitor", (error) => console.error(error));
-process.on("unhandledRejection", (error) => console.error(error));
+process.on("uncaughtExceptionMonitor", console.error);
+process.on("unhandledRejection", console.error);
+process.on("uncaughtException", console.error);
 
 /* Code by Walter */
