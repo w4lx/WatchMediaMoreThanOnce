@@ -2,15 +2,11 @@
 
 [![Run on Repl.it](https://replit.com/badge/github/W4LX/ViewOnceWa)](https://replit.com/github/W4LX/WatchMediaMoreThanOnce)
 
-### OptikServers
-
-[OptikServers](https://my.optikservers.com/join/2LSsZsNRPnBMsbdZ)
-
 ### Redes sociales
 
 Instagram: [Walter](https://www.instagram.com/walx.dev/)
 
-TikTok: [Walter](hhttps://www.tiktok.com/@walx.dev)
+TikTok: [Walter](https://www.tiktok.com/@walx.dev)
 
 Discord: [WhatsApp Tools](https://discord.gg/byjMwu7uyZ)
 

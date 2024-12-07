@@ -1,13 +1,12 @@
-import express from "express";
+import { createServer } from "http";
 
 export function keepAlive() {
-  const PORT = process.env.PORT || process.env.SERVER_PORT;
+  const PORT = process.env.PORT || process.env.SERVER_PORT || 3000;
 
-  const app = express();
-
-  app.get("/", (_, res) => res.send("Running..."));
-
-  app.listen(PORT || 3000, () => {
-    console.log("Server runngin...");
+  const server = createServer((_, res) => {
+    res.writeHead(200, { "Content-Type": "text/plain" });
+    res.end("Running...");
   });
+
+  server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 }

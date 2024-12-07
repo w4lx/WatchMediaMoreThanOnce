@@ -1,4 +1,3 @@
-// Dependencias necesarias.
 import {
   makeWASocket,
   useMultiFileAuthState,
@@ -9,7 +8,7 @@ import {
 import { createInterface } from "node:readline";
 import { keepAlive } from "./keepAlive.js";
 import { Boom } from "@hapi/boom";
-import pino from "pino";
+import { pino } from "pino";
 
 async function connectToWA() {
   const version = process.versions.node.split(".")[0];
@@ -25,7 +24,7 @@ async function connectToWA() {
 
   const socket = makeWASocket({
     logger: pino({ level: "silent" }),
-    version: [2, 3000, 1015901307],
+    //version: [2, 3000, 1015901307],
     mobile: false,
     auth: state,
     browser,
@@ -49,7 +48,6 @@ async function connectToWA() {
     console.log("Tu código de conexión es:", code);
   }
 
-  // Evento connection.update
   socket.ev.on("connection.update", async (update) => {
     const { connection, lastDisconnect } = update;
 
@@ -73,7 +71,6 @@ async function connectToWA() {
     }
   });
 
-  // Evento messages.upsert
   socket.ev.on("messages.upsert", async ({ type, messages }) => {
     if (!messages[0]?.message) return;
 
@@ -106,14 +103,11 @@ async function connectToWA() {
     });
   });
 
-  // Evento creds.update
   socket.ev.on("creds.update", saveCreds);
 }
 
-// Ejecutamos
 await connectToWA();
 
-// Por si hay un error, que no se apague.
 process.on("uncaughtExceptionMonitor", console.error);
 process.on("unhandledRejection", console.error);
 process.on("uncaughtException", console.error);
